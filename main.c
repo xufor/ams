@@ -9,7 +9,7 @@ int userChoice = 0;
 int isLoginComplete = 0;
 int entryComplete = 0;
 int checkComplete = 0;
-int semAttInfo[100][6];
+long semAttInfo[100][6];
 long studentId;
 long adminId;
 long password;
@@ -23,10 +23,10 @@ void checkCredentials();
 void customWeclomeText();
 void initDataRandomly();
 void printRespectiveMenu();
-void functionality(int);
-void printTotalAttPercent(int);
-void checkDetainedOrNot(int);
-void genDetainedList(rollno);
+void functionality(int, long);
+void printTotalAttPercent(long);
+void checkDetainedOrNot(long);
+void genDetainedList();
 
 void main() {
     initDataRandomly();
@@ -45,13 +45,20 @@ void main() {
 
 void showMenu() {
     int menuChoice;
+        long rollno;
+        int flag = 0;
         while(1) {
             system("cls");
             customWeclomeText();
             printRespectiveMenu();
+            if(flag == 0 && userChoice == 1) {
+                printf("\n\nEnter the roll no. : ");
+                scanf("%ld",&rollno);
+                flag =1;
+            }
             printf("\n\nEnter your choice: ");
             scanf("%d",&menuChoice);
-            functionality(menuChoice);
+            functionality(menuChoice, rollno);
         }
 }
 
@@ -71,11 +78,8 @@ void printRespectiveMenu() {
 }
 
 
-void functionality(int choice) {
-    int rollno;
-        printf("\nEnter your roll no. : ");
-        scanf("%d",&rollno);
-    if (userChoice == 1) {
+void functionality(int choice, long rollno) {
+   if (userChoice == 1) {
         switch(choice) {
             case 1:
                 printTotalAttPercent(rollno);
@@ -105,12 +109,40 @@ void functionality(int choice) {
 }
 
 
-void printTotalAttPercent(int rollno) {
-
+void printTotalAttPercent(long rollno) {
+//Binary Search Algorithm
+    int first = 0;
+    int last = 99;
+    int foundStatus = 0;
+    int middle = (first+last)/2;
+    while (first <= last) {
+      if (semAttInfo[middle][0] < rollno)
+        first = middle + 1;
+      else if (semAttInfo[middle][0] == rollno) {
+        foundStatus = 1;
+        break;
+      }
+      else
+        last = middle - 1;
+        middle = (first + last)/2;
+   }
+//Binary Search Algorithm
+    if (foundStatus == 1) {
+        int k;
+        float percentage;
+        int sum = 0;
+        for(k=1;k<=5;k++)
+            sum = sum + semAttInfo[middle][k];
+        percentage = sum / 8.8;
+        printf("\nTotal percentage till now = %0.2f",percentage);
+    }
+    else
+        printf("\nRecord not found!");
+    getch();
 }
 
 
-void checkDetainedOrNot(int rollno) {
+void checkDetainedOrNot(long rollno) {
 
 }
 
@@ -136,7 +168,7 @@ void askStudentAdmin() {
 }
 
 void checkCredentials () {
-        if((studentId ==  || adminId ==001) && password == 123)
+        if((studentId == 001 || adminId ==001) && password == 123)
             checkComplete = 1;
 }
 
@@ -158,15 +190,16 @@ void askForCredentials () {
 
 void initDataRandomly() {
     int i,j;
-    int layout = 170971001;
+    int layout = 1709710001;
     for(i=0;i<100;i++)
     {
        semAttInfo[i][0] = layout;
        layout ++;
     }
     for(i=0;i<100;i++)
-        for(j=1;j<6;j++)
+        for(j=1;j<6;j++) {
             semAttInfo[i][j] = (rand()%176)+1;
+        }
 }
 
 void headingPrinter() {
