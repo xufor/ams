@@ -5,27 +5,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct student {
-    int rollno;
-    int totalAttendance;
-};
-
-struct weekStatus {
-    int totalOfDay;
-};
-
-struct monthStatus {
-    int totalOfMonth;
-};
-
 int userChoice = 0;
 int isLoginComplete = 0;
 int entryComplete = 0;
 int checkComplete = 0;
-struct student studentInfo[5];
-struct weekStatus weeklyAttInfo[5][7];
-struct monthStatus monthlyAttInfo[5][12];
-long studentRollNumber;
+int semAttInfo[100][6];
+long studentId;
 long adminId;
 long password;
 
@@ -38,6 +23,10 @@ void checkCredentials();
 void customWeclomeText();
 void initDataRandomly();
 void printRespectiveMenu();
+void functionality(int);
+void printTotalAttPercent(int);
+void checkDetainedOrNot(int);
+void genDetainedList(rollno);
 
 void main() {
     initDataRandomly();
@@ -56,31 +45,77 @@ void main() {
 
 void showMenu() {
     int menuChoice;
-    system("cls");
-    customWeclomeText();
-    printRespectiveMenu(userChoice);
-    printf("\n\nEnter your choice: ");
-    scanf("%d",&menuChoice);
+        while(1) {
+            system("cls");
+            customWeclomeText();
+            printRespectiveMenu();
+            printf("\n\nEnter your choice: ");
+            scanf("%d",&menuChoice);
+            functionality(menuChoice);
+        }
 }
 
 void printRespectiveMenu() {
     if(userChoice == 1)
     {
-        printf("1.To mark todays attendance.\n");
-        printf("2.To see your todays's attendance status.\n");
-        printf("3.To see your current week's attendance status.\n");
-        printf("4.To check your total attendance percentage.\n");
-        printf("5.To check if you are detained in next examinations or not.\n");
-        printf("5.To quit the system.");
+        printf("1.To check your total attendance percentage.\n");
+        printf("2.To check if you are detained in next examinations or not.\n");
+        printf("3.To quit the system.");
     }
     else
     {
-        printf("1.To check a student's attendance records.\n");
-        printf("2.To check a student's weekly attendance.\n");
-        printf("3.To check a student's total attendance pecentage.\n");
-        printf("4.To generate a detained list.\n");
-        printf("5.To quit the system.");
+        printf("1.To generate a detained list in descending order.\n");
+        printf("2.To quit the system.");
     }
+
+}
+
+
+void functionality(int choice) {
+    int rollno;
+        printf("\nEnter your roll no. : ");
+        scanf("%d",&rollno);
+    if (userChoice == 1) {
+        switch(choice) {
+            case 1:
+                printTotalAttPercent(rollno);
+                break;
+            case 2:
+                checkDetainedOrNot(rollno);
+                break;
+            case 3:
+                exit(0);
+                break;
+            default:
+                printf("\nEnter a valid choice.");
+        }
+    }
+    else {
+        switch(choice) {
+            case 1:
+                genDetainedList();
+                break;
+            case 2:
+                exit(0);
+                break;
+            default:
+                printf("\nEnter a valid choice.");
+        }
+    }
+}
+
+
+void printTotalAttPercent(int rollno) {
+
+}
+
+
+void checkDetainedOrNot(int rollno) {
+
+}
+
+
+void genDetainedList() {
 
 }
 
@@ -101,19 +136,19 @@ void askStudentAdmin() {
 }
 
 void checkCredentials () {
-        if((studentRollNumber == 001 || adminId ==001) && password == 123)
+        if((studentId ==  || adminId ==001) && password == 123)
             checkComplete = 1;
 }
 
 void askForCredentials () {
     if(userChoice == 1) {
-        printf("\nEnter Student Roll Number: ");
-        scanf("%ld",&studentRollNumber);
+        printf("\nEnter Student UID: ");
+        scanf("%ld",&studentId);
         printf("\nEnter Password: ");
         scanf("%ld",&password);
     }
     else if(userChoice == 2) {
-        printf("\nEnter Admin ID: ");
+        printf("\nEnter Admin UID: ");
         scanf("%ld",&adminId);
         printf("\nEnter Password: ");
         scanf("%ld",&password);
@@ -124,18 +159,14 @@ void askForCredentials () {
 void initDataRandomly() {
     int i,j;
     int layout = 170971001;
-    for(i=0;i<5;i++)
+    for(i=0;i<100;i++)
     {
-       studentInfo[i].rollno = layout;
+       semAttInfo[i][0] = layout;
        layout ++;
-       studentInfo[i].totalAttendance = (rand()%100)+1;
     }
-    for(i=0;i<5;i++)
-        for(j=0;j<7;j++)
-            weeklyAttInfo[i][j].totalOfDay = (rand()%8)+1;
-    for(i=0;i<5;i++)
-        for(j=0;j<12;j++)
-            weeklyAttInfo[i][j].totalOfDay = (rand()%20)+1;
+    for(i=0;i<100;i++)
+        for(j=1;j<6;j++)
+            semAttInfo[i][j] = (rand()%176)+1;
 }
 
 void headingPrinter() {
