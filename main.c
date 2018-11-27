@@ -143,7 +143,38 @@ void printTotalAttPercent(long rollno) {
 
 
 void checkDetainedOrNot(long rollno) {
-
+//Binary Search Algorithm
+    int first = 0;
+    int last = 99;
+    int foundStatus = 0;
+    int middle = (first+last)/2;
+    while (first <= last) {
+      if (semAttInfo[middle][0] < rollno)
+        first = middle + 1;
+      else if (semAttInfo[middle][0] == rollno) {
+        foundStatus = 1;
+        break;
+      }
+      else
+        last = middle - 1;
+        middle = (first + last)/2;
+   }
+//Binary Search Algorithm
+    if (foundStatus == 1) {
+        int k;
+        float percentage;
+        int sum = 0;
+        for(k=1;k<=5;k++)
+            sum = sum + semAttInfo[middle][k];
+        percentage = sum / 8.8;
+        if(percentage < 75)
+            printf("\nYou are detained in next examimnations.");
+        else
+            printf("\nYou are not detained in next examimnations.");
+    }
+    else
+        printf("\nRecord not found!");
+    getch();
 }
 
 
